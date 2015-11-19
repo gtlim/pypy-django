@@ -1,0 +1,20 @@
+
+import os
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_perf_test.settings')
+import django
+django.setup()
+
+from django.utils import timezone
+from fooapp.models import Question, Choice
+from datetime import datetime, timedelta
+
+if __name__ == '__main__':
+    d0 = timezone.now()
+    for i in range(1000):
+        #print i
+        q = Question(question_text="foo bar %d" % i, pub_date=d0 + timedelta(seconds=i))
+        q.save()
+        for k in range(3):
+            c = Choice(question=q, choice_text="aaaaaaaaaaaa %d %d" % (i, k), votes=i)
+            c.save()
