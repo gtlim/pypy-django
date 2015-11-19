@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
+packages = find_packages()
+
 setup(
     name='django-perf-tester',
     version='0.0.1',
