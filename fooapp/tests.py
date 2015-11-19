@@ -36,8 +36,8 @@ class PerfoTest(TestCase):
 
     def test_orm_datetime_filtering(self):
         name = inspect.currentframe().f_code.co_name[5:]
-        d0 = datetime(2015, 10, 21, 0, 0, 15, tzinfo=utc)
-        d1 = datetime(2015, 10, 21, 0, 0, 30, tzinfo=utc)
+        d0 = datetime(2015, 10, 21, 0, 0, 0, tzinfo=utc)
+        d1 = datetime(2015, 10, 21, 10, 0, 0, tzinfo=utc)
         start = time.time()
         for i in xrange(10):
             # make sure we exhaust the iterators
