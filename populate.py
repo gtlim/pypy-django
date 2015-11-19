@@ -10,9 +10,8 @@ from fooapp.models import Question, Choice
 from datetime import datetime, timedelta
 
 if __name__ == '__main__':
-    d0 = timezone.now()
+    d0 = timezone.datetime(2015, 10, 21, tzinfo=timezone.utc)
     for i in range(1000):
-        #print i
         q = Question(question_text="foo bar %d" % i, pub_date=d0 + timedelta(seconds=i))
         q.save()
         for k in range(3):
