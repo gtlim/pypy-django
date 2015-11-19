@@ -29,7 +29,7 @@ class PerfoTest(TestCase):
         """
         name = inspect.currentframe().f_code.co_name[5:]
         start = time.time()
-        for i in xrange(10):
+        for i in xrange(self.iterations):
             add(1, 2)
         duration = time.time() - start
         print u"{0}s per iteration for {1} (iterations={2})".format(duration/self.iterations, name, self.iterations)
