@@ -18,68 +18,28 @@ class TemplatePerfTest(PerfoTestCase):
 
     def test_render_child(self):
         name = inspect.currentframe().f_code.co_name[5:]
-        print
-        iteration = 0
-        for n in self.small_iterations:
-            start = time.time()
-            for i in xrange(int(n)-1):
-                iteration += 1
-                self.render_template("child.html")
-            duration = time.time() - start
-            start = time.time()
-            iteration += 1
-            duration = time.time() - start
+
+        def f():
             self.render_template("child.html")
-            last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+        self.run_benchmark(name, self.xsmall_iterations, f)
 
     def test_render_child_no_extends(self):
         name = inspect.currentframe().f_code.co_name[5:]
-        print
-        iteration = 0
-        for n in self.xsmall_iterations:
-            start = time.time()
-            for i in xrange(int(n)-1):
-                iteration += 1
-                self.render_template("child_no_extends.html")
-            duration = time.time() - start
-            start = time.time()
-            iteration += 1
-            duration = time.time() - start
+
+        def f():
             self.render_template("child_no_extends.html")
-            last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+        self.run_benchmark(name, self.xsmall_iterations, f)
 
     def test_render_base(self):
         name = inspect.currentframe().f_code.co_name[5:]
-        print
-        iteration = 0
-        for n in self.xsmall_iterations:
-            start = time.time()
-            for i in xrange(int(n)-1):
-                iteration += 1
-                self.render_template("base.html")
-            duration = time.time() - start
-            start = time.time()
-            iteration += 1
-            duration = time.time() - start
+
+        def f():
             self.render_template("base.html")
-            last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+        self.run_benchmark(name, self.xsmall_iterations, f)
 
     def test_render_base_no_extends(self):
         name = inspect.currentframe().f_code.co_name[5:]
-        print
-        iteration = 0
-        for n in self.xsmall_iterations:
-            start = time.time()
-            for i in xrange(int(n)-1):
-                iteration += 1
-                self.render_template("base_no_extends.html")
-            duration = time.time() - start
-            start = time.time()
-            iteration += 1
-            duration = time.time() - start
+
+        def f():
             self.render_template("base_no_extends.html")
-            last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+        self.run_benchmark(name, self.xsmall_iterations, f)

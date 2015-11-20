@@ -1,3 +1,4 @@
+import time
 from django.test import TestCase
 
 
@@ -13,3 +14,15 @@ class PerfoTestCase(TestCase):
     def report_run(self, name, nb_iteration,
                    total_duration, last_iteration_duration):
         print u"{0:e}s avg per iteration for {1} (iterations={2}) -- last operation: {3:e}s".format((total_duration + last_iteration_duration)/nb_iteration, name, nb_iteration, last_iteration_duration)
+
+    def run_benchmark(self, name, iterations, func):
+        print
+        for n in iterations:
+            start = time.time()
+            for i in xrange(int(n)-1):
+                func()
+            duration = time.time() - start
+            start = time.time()
+            func()
+            last_operation = time.time() - start
+            self.report_run(name, n, duration, last_operation)
