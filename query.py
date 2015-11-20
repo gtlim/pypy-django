@@ -2,7 +2,7 @@
 
 import os, sys
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_perf_test.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_perf_project.settings')
 import django
 django.setup()
 

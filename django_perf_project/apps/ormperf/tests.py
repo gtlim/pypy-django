@@ -3,23 +3,20 @@ import time
 from datetime import datetime
 
 from django.db.models import Count
-from django.test import TestCase
 from django.utils.timezone import utc
 
-from ormperf.models import Question
+from .models import Question
+from django_perf_project.apps.core.tests import PerfoTestCase
 
 
 def add(x, y):
     return x + y
 
 
-class PerfoTest(TestCase):
+class OrmPerfoTest(PerfoTestCase):
 
     def setUp(self):
-        self.iterations = [10, 1e2-10, 1e3-1e2,
-                           1e4-1e3, 1e5-1e4, 1e6-1e5,
-                           1e7-1e6]
-        self.small_iterations = self.iterations[0:5]
+        super(OrmPerfoTest, self).setUp()
 
         # creating 100 questions
         for i in range(1, 11):
@@ -27,10 +24,6 @@ class PerfoTest(TestCase):
                 Question.objects.create(
                     question_text="q {}".format(i),
                     pub_date=datetime(2015, 10, i, j, 0, 15, tzinfo=utc))
-
-    def report_run(self, name, nb_iteration,
-                   total_duration, last_iteration_duration):
-        print u"{0:e}s per iteration for {1} (iterations={2}) -- last operation: {3:e}s".format((total_duration + last_iteration_duration)/nb_iteration, name, nb_iteration, last_iteration_duration)
 
 #    def test_is_pypyjit_available(self):
 #        try:
@@ -59,7 +52,7 @@ class PerfoTest(TestCase):
             iteration += 1
             add(1, 2)
             last_operation = time.time() - start
-            self.report_run(name, iteration, duration, last_operation)
+            self.report_run(name, n, duration, last_operation)
 
     def test_orm_datetime_filtering(self):
         name = inspect.currentframe().f_code.co_name[5:]
@@ -78,7 +71,7 @@ class PerfoTest(TestCase):
             iteration += 1
             [x for x in Question.objects.filter(pub_date__gte=d0, pub_date__lt=d1).all()]
             last_operation = time.time() - start
-            self.report_run(name, iteration, duration, last_operation)
+            self.report_run(name, n, duration, last_operation)
 
     def test_orm_first_ten(self):
         name = inspect.currentframe().f_code.co_name[5:]
@@ -95,7 +88,7 @@ class PerfoTest(TestCase):
             iteration += 1
             [x for x in Question.objects.all()[:10]]
             last_operation = time.time() - start
-            self.report_run(name, iteration, duration, last_operation)
+            self.report_run(name, n, duration, last_operation)
 
     def test_orm_annotation(self):
         name = inspect.currentframe().f_code.co_name[5:]
@@ -112,4 +105,4 @@ class PerfoTest(TestCase):
             iteration += 1
             [q for q in Question.objects.extra({'pub_day': "date(pub_date)"}).values('pub_day').annotate(count=Count('id'))]
             last_operation = time.time() - start
-            self.report_run(name, iteration, duration, last_operation)
+            self.report_run(name, n, duration, last_operation)
