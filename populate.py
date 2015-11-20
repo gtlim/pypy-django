@@ -6,7 +6,7 @@ import django
 django.setup()
 
 from django.utils import timezone
-from fooapp.models import Question, Choice
+from ormperf.models import Question, Choice
 from datetime import datetime, timedelta
 
 if __name__ == '__main__':

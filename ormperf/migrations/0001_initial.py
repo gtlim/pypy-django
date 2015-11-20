@@ -33,6 +33,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='choice',
             name='question',
-            field=models.ForeignKey(help_text='', on_delete=django.db.models.deletion.CASCADE, to='fooapp.Question'),
+            field=models.ForeignKey(help_text='', on_delete=django.db.models.deletion.CASCADE, to='ormperf.Question'),
         ),
     ]

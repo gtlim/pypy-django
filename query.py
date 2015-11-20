@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_perf_test.settings')
 import django
 django.setup()
 
-from fooapp.models import Question, Choice
+from ormperf.models import Question, Choice
 from datetime import datetime, timedelta
 from django.utils.timezone import utc
 

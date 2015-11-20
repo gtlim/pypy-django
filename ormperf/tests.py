@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.test import TestCase
 from django.utils.timezone import utc
 
-from fooapp.models import Question
+from ormperf.models import Question
 
 
 def add(x, y):
@@ -16,8 +16,10 @@ def add(x, y):
 class PerfoTest(TestCase):
 
     def setUp(self):
-        self.iterations = [1, 10, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]
-        self.small_iterations = self.iterations[0:6]
+        self.iterations = [10, 1e2-10, 1e3-1e2,
+                           1e4-1e3, 1e5-1e4, 1e6-1e5,
+                           1e7-1e6]
+        self.small_iterations = self.iterations[0:5]
 
         # creating 100 questions
         for i in range(1, 11):
@@ -28,7 +30,7 @@ class PerfoTest(TestCase):
 
     def report_run(self, name, nb_iteration,
                    total_duration, last_iteration_duration):
-        print u"{0:e}s per iteration for {1} (iterations={2}) -- last operation: {3:e}s".format(total_duration/nb_iteration, name, nb_iteration, last_iteration_duration)
+        print u"{0:e}s per iteration for {1} (iterations={2}) -- last operation: {3:e}s".format((total_duration + last_iteration_duration)/nb_iteration, name, nb_iteration, last_iteration_duration)
 
 #    def test_is_pypyjit_available(self):
 #        try:
@@ -46,62 +48,68 @@ class PerfoTest(TestCase):
         """
         name = inspect.currentframe().f_code.co_name[5:]
         print
+        iteration = 0
         for n in self.iterations:
             start = time.time()
-            for i in xrange(int(n)):
+            for i in xrange(int(n)-1):
+                iteration += 1
                 add(1, 2)
             duration = time.time() - start
             start = time.time()
+            iteration += 1
             add(1, 2)
             last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+            self.report_run(name, iteration, duration, last_operation)
 
     def test_orm_datetime_filtering(self):
         name = inspect.currentframe().f_code.co_name[5:]
         d0 = datetime(2015, 10, 1, 0, 0, 0, tzinfo=utc)
         d1 = datetime(2015, 10, 12, 10, 0, 0, tzinfo=utc)
         print
+        iteration = 0
         for n in self.small_iterations:
             start = time.time()
-            for i in xrange(int(n)):
+            for i in xrange(int(n)-1):
                 # make sure we exhaust the iterators
+                iteration += 1
                 [x for x in Question.objects.filter(pub_date__gte=d0, pub_date__lt=d1).all()]
             duration = time.time() - start
             start = time.time()
+            iteration += 1
             [x for x in Question.objects.filter(pub_date__gte=d0, pub_date__lt=d1).all()]
             last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+            self.report_run(name, iteration, duration, last_operation)
 
     def test_orm_first_ten(self):
         name = inspect.currentframe().f_code.co_name[5:]
         print
+        iteration = 0
         for n in self.small_iterations:
             start = time.time()
-            for i in xrange(int(n)):
+            for i in xrange(int(n)-1):
                 # make sure we exhaust the iterators
+                iteration += 1
                 [x for x in Question.objects.all()[:10]]
             duration = time.time() - start
             start = time.time()
+            iteration += 1
             [x for x in Question.objects.all()[:10]]
             last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
+            self.report_run(name, iteration, duration, last_operation)
 
     def test_orm_annotation(self):
         name = inspect.currentframe().f_code.co_name[5:]
         print
+        iteration = 0
         for n in self.small_iterations:
             start = time.time()
-            for i in xrange(int(n)):
+            for i in xrange(int(n)-1):
                 # make sure we exhaust the iterators
-                [q for q in Question.objects.extra({'pub_day':"date(pub_date)"}).values('pub_day').annotate(count=Count('id'))]
+                iteration += 1
+                [q for q in Question.objects.extra({'pub_day': "date(pub_date)"}).values('pub_day').annotate(count=Count('id'))]
             duration = time.time() - start
             start = time.time()
-            [q for q in Question.objects.extra({'pub_day':"date(pub_date)"}).values('pub_day').annotate(count=Count('id'))]
+            iteration += 1
+            [q for q in Question.objects.extra({'pub_day': "date(pub_date)"}).values('pub_day').annotate(count=Count('id'))]
             last_operation = time.time() - start
-            self.report_run(name, n, duration, last_operation)
-
-
-
-#    def test_template_rendering(self):
-#        name = inspect.currentframe().f_code.co_name[5:]
-
+            self.report_run(name, iteration, duration, last_operation)
