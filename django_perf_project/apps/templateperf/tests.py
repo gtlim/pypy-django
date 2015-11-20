@@ -1,5 +1,4 @@
 import inspect
-import time
 
 from django.template import loader, RequestContext
 from django_perf_project.apps.core.tests import PerfoTestCase
