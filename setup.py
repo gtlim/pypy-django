@@ -9,7 +9,6 @@ setup(
     description="",
     url='',
     packages=find_packages(),
-    package_data={'django_perf_project': ['templates/*.*']},
     include_package_data=True,
     scripts=['manage.py', 'query.py', 'populate.py'],
 )
