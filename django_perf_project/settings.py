@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_perf_project.apps.ormperf',
     'django_perf_project.apps.templateperf',
+    'django_perf_project.apps.botbotperf',
 ]
 
 MIDDLEWARE_CLASSES = [
