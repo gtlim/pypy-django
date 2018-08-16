@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django_perf_project.apps.ormperf.views import f
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^ormperf/', f),
 ]
