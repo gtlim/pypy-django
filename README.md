@@ -2,6 +2,8 @@
 
 The goal of this project is to benchmark pypy against python 2.7
 
+get from https://github.com/yml/django-perf-tester
+
 ## Installation
 
 * Create a virtualenv `virtualenv -p /usr/bin/pypy pypy_venv`
