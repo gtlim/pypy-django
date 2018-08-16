@@ -8,5 +8,5 @@ The goal of this project is to benchmark pypy against python 2.7
 * cd into this new virtualenv and activate it`. bin/activate`
 * `pip install -e git+https://github.com/yml/django-perf-tester#egg=django-perf-tester`
 * pip install the requirements `pip install -r src/django-perf-tester/requirements.txt`
-* run `python manage.py runserver`
+* run `python manage.py runserver 0.0.0.0:8000`
 * run `tester.py`
